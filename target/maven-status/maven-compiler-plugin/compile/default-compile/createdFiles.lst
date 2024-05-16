@@ -1,0 +1,12 @@
+com\example\Losidiomas\Entidades\EntidadLogin.class
+com\example\Losidiomas\Repositorio\RepoLogin.class
+com\example\Losidiomas\Servicios\ServiciosAlumno.class
+com\example\Losidiomas\Entidades\RegistroEntidad.class
+com\example\Losidiomas\Servicios\ServiciosLogin.class
+com\example\Losidiomas\Listas\ListadoDatos.class
+com\example\Losidiomas\Controlador\IdiomasPrincipal.class
+com\example\Losidiomas\Repositorio\RepoAlumno.class
+com\example\Losidiomas\Entidades\EntidadAlumno.class
+com\example\Losidiomas\Repositorio\RepoRegistro.class
+com\example\Losidiomas\Servicios\ServicioRegistro.class
+com\example\Losidiomas\LosidiomasApplication.class
