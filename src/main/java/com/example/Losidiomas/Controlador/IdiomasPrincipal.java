@@ -9,6 +9,8 @@ import com.example.Losidiomas.Repositorio.RepoLogin;
 import com.example.Losidiomas.Servicios.ServicioRegistro;
 import com.example.Losidiomas.Servicios.ServiciosAlumno;
 import com.example.Losidiomas.Servicios.ServiciosLogin;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,26 +64,45 @@ public class IdiomasPrincipal {
     
     
     @PostMapping("/guardarusuarios")
-    public List<EntidadLogin> guardarusuario(int idusuario, String usuariouv, String contra, Date fecha){
+    public List<EntidadLogin> guardarusuario(int idusuario, String usuariouv, String contra, String fecha){
         EntidadLogin l = new EntidadLogin();
         l.setIdusuario(idusuario);
         l.setUsuariouv(usuariouv);
         l.setContra(contra);
-        l.setFecha(fecha);
+      
+        SimpleDateFormat formatoOriginal = new SimpleDateFormat("dd/MM/yyyy");
         
-        if(slogin.guardarusuario(l)){
+        try {
+            Date fechaDate = formatoOriginal.parse(fecha);
+            l.setFecha(fechaDate);
+        } catch (ParseException e) {
+            // Manejar la excepción si la conversión de fecha falla
+            e.printStackTrace();
+        }
+        
+        if (slogin.guardarusuario(l)) {
             return slogin.obtenerusuario();
         }
         return null;
+    
+    
     }
     
     @PutMapping("/editarusuarios")
-    public List<EntidadLogin> editarusuario(int idusuario, String usuariouv, String contra, Date fecha){
+    public List<EntidadLogin> editarusuario(int idusuario, String usuariouv, String contra, String fecha){
         EntidadLogin l = new EntidadLogin();
         l.setIdusuario(idusuario);
         l.setUsuariouv(usuariouv);
         l.setContra(contra);
-        l.setFecha(fecha);
+         SimpleDateFormat formatoOriginal = new SimpleDateFormat("dd/MM/yyyy");
+        
+        try {
+            Date fechaDate = formatoOriginal.parse(fecha);
+            l.setFecha(fechaDate);
+        } catch (ParseException e) {
+            // Manejar la excepción si la conversión de fecha falla
+            e.printStackTrace();
+        }
         
         if(slogin.editarusuario(l)){
             return slogin.obtenerusuario();
@@ -120,8 +141,11 @@ public class IdiomasPrincipal {
        a.setGrupo(grupo);
        a.setTipoalumno(tipoalumno);
        a.setValida(valida);
-       a.setFecha(fecha);
-        if(salumno.guardaralumno(a)){
+       SimpleDateFormat formatoOriginal = new SimpleDateFormat("dd/MM/yyyy");
+
+        a.setFecha(fecha); // Establecer la fecha como Date
+        
+        if (salumno.guardaralumno(a)) {
             return salumno.obteneralumno();
         }
         return null;
@@ -139,7 +163,9 @@ public class IdiomasPrincipal {
        a.setGrupo(grupo);
        a.setTipoalumno(tipoalumno);
        a.setValida(valida);
-       a.setFecha(fecha);
+        SimpleDateFormat formatoOriginal = new SimpleDateFormat("dd/MM/yyyy");
+
+        a.setFecha(fecha);
         if(salumno.editaralumno(a)){
             return salumno.obteneralumno();
         }
@@ -174,6 +200,7 @@ public class IdiomasPrincipal {
         RegistroEntidad r = new RegistroEntidad();
        r.setId(id);
        r.setMatricula(matricula);
+       SimpleDateFormat formatoOriginal = new SimpleDateFormat("dd/MM/yyyy");
        r.setFecha(fecha);
        r.setHora_entrada(hora_entrada);
        r.setHora_salida(hora_salida);
@@ -192,6 +219,7 @@ public class IdiomasPrincipal {
         RegistroEntidad r = new RegistroEntidad();
        r.setId(id);
        r.setMatricula(matricula);
+       SimpleDateFormat formatoOriginal = new SimpleDateFormat("dd/MM/yyyy");
        r.setFecha(fecha);
        r.setHora_entrada(hora_entrada);
        r.setHora_salida(hora_salida);
