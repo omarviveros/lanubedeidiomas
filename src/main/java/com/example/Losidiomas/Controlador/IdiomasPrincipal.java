@@ -54,15 +54,15 @@ public class IdiomasPrincipal {
     
     // endpoint iniciar sesion 
     
-   @PostMapping("/iniciosesion")
-    public String login(@RequestBody EntidadLogin loginRequest){
-        EntidadLogin usuario = rlogin.findByUsuariouvAndContra(loginRequest.getUsuariouv(), loginRequest.getContra());
-        if (usuario != null) {
-            return "Inicio de sesión correcta: " + usuario.getUsuariouv();
-        } else {
-            return "Usuario y/o contraseña incorrectos";
-        }
+  @PostMapping("/iniciosesion")
+public ResponseEntity<String> login(@RequestBody EntidadLogin loginRequest){
+    EntidadLogin usuario = rlogin.findByUsuariouvAndContra(loginRequest.getUsuariouv(), loginRequest.getContra());
+    if (usuario != null) {
+        return ResponseEntity.ok("Inicio de sesión correcta: " + usuario.getUsuariouv());
+    } else {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario y/o contraseña incorrectos");
     }
+}
     
     
     @PostMapping("/guardarusuarios")
