@@ -14,7 +14,9 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,13 +56,18 @@ public class IdiomasPrincipal {
     
     // endpoint iniciar sesion 
     
-  @PostMapping("/iniciosesion")
-public ResponseEntity<String> login(@RequestBody EntidadLogin loginRequest){
+ @PostMapping("/iniciosesion")
+public ResponseEntity<Map<String, String>> login(@RequestBody EntidadLogin loginRequest){
     EntidadLogin usuario = rlogin.findByUsuariouvAndContra(loginRequest.getUsuariouv(), loginRequest.getContra());
     if (usuario != null) {
-        return ResponseEntity.ok("Inicio de sesión correcta: " + usuario.getUsuariouv());
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Inicio de sesión correcta");
+        response.put("usuario", usuario.getUsuariouv());
+        return ResponseEntity.ok(response);
     } else {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario y/o contraseña incorrectos");
+        Map<String, String> response = new HashMap<>();
+        response.put("error", "Usuario y/o contraseña incorrectos");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
     }
 }
     
