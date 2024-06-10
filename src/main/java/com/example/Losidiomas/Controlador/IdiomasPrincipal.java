@@ -97,27 +97,27 @@ public ResponseEntity<Map<String, String>> login(@RequestBody EntidadLogin login
     
     }
     
-    @PutMapping("/editarusuarios")
-    public List<EntidadLogin> editarusuario(int idusuario, String usuariouv, String contra, String fecha){
-        EntidadLogin l = new EntidadLogin();
-        l.setIdusuario(idusuario);
-        l.setUsuariouv(usuariouv);
-        l.setContra(contra);
-         SimpleDateFormat formatoOriginal = new SimpleDateFormat("dd/MM/yyyy");
-        
-        try {
-            Date fechaDate = formatoOriginal.parse(fecha);
-            l.setFecha(fechaDate);
-        } catch (ParseException e) {
-            // Manejar la excepción si la conversión de fecha falla
-            e.printStackTrace();
+   @PutMapping("/editarusuarios")
+public ResponseEntity<?> editarUsuario(@RequestBody EntidadLogin usuario) {
+    try {
+        // Intenta editar el usuario
+        boolean exito = slogin.editarusuario(usuario);
+        if (exito) {
+            // Si la edición es exitosa, devuelve la lista actualizada de usuarios
+            List<EntidadLogin> usuariosActualizados = slogin.obtenerusuario();
+            return ResponseEntity.ok(usuariosActualizados);
+        } else {
+            // Si la edición falla, devuelve un mensaje de error
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("No se pudo editar el usuario.");
         }
-        
-        if(slogin.editarusuario(l)){
-            return slogin.obtenerusuario();
-        }
-        return null;
+    } catch (Exception e) {
+        // Maneja otros errores
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Ocurrió un error al editar el usuario.");
     }
+}
+
     
     @DeleteMapping("/eliminarusuarios")
     public List<EntidadLogin> eliminarusuario(int idusuario){
