@@ -161,25 +161,17 @@ public ResponseEntity<?> editarUsuario(@RequestBody EntidadLogin usuario) {
     }
     
     @PutMapping("/editaralumno")
-    public List<EntidadAlumno> editarralumnos(Integer id, String nusuario,  String nombre, String dependencia, int tipousuario, int semestre, String grupo, String tipoalumno, String valida ,Date fecha){
-        EntidadAlumno a = new EntidadAlumno();
-       a.setId(id);
-       a.setNusuario(nusuario);
-       a.setNombre(nombre);
-       a.setDependencia(dependencia);
-       a.setTipousuario(tipousuario);
-       a.setSemestre(semestre);
-       a.setGrupo(grupo);
-       a.setTipoalumno(tipoalumno);
-       a.setValida(valida);
-        SimpleDateFormat formatoOriginal = new SimpleDateFormat("dd/MM/yyyy");
-
-        a.setFecha(fecha);
-        if(salumno.editaralumno(a)){
+public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
+    try {
+        // Aquí puedes validar y procesar el objeto 'alumno' recibido desde el frontend
+        if(salumno.editaralumno(alumno)) {
             return salumno.obteneralumno();
         }
-        return null;
+    } catch (Exception error) {
+        System.out.println("Error al editar el alumno: " + error.getMessage());
     }
+    return null;
+}
     
     @DeleteMapping("/eliminaralumno")
     public List<EntidadAlumno> eliminaralumnos(Integer id){
