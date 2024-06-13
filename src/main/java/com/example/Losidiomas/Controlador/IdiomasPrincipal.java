@@ -139,27 +139,32 @@ public ResponseEntity<?> editarUsuario(@RequestBody EntidadLogin usuario) {
     }
  
      @PostMapping("/guardaralumno")
-    public List<EntidadAlumno> guardaralumnos(Integer id, String nusuario,  String nombre, String dependencia, int tipousuario, int semestre, String grupo, String tipoalumno, String valida ,Date fecha){
-        EntidadAlumno a = new EntidadAlumno();
-       a.setId(id);
-       a.setNusuario(nusuario);
-       a.setNombre(nombre);
-       a.setDependencia(dependencia);
-       a.setTipousuario(tipousuario);
-       a.setSemestre(semestre);
-       a.setGrupo(grupo);
-       a.setTipoalumno(tipoalumno);
-       a.setValida(valida);
-       SimpleDateFormat formatoOriginal = new SimpleDateFormat("dd/MM/yyyy");
+    public List<EntidadAlumno> guardaralumnos(Integer id, String nusuario, String nombre, String dependencia, int tipousuario, int semestre, String grupo, String tipoalumno, String valida, String fecha) {
+    EntidadAlumno a = new EntidadAlumno();
+    a.setId(id);
+    a.setNusuario(nusuario);
+    a.setNombre(nombre);
+    a.setDependencia(dependencia);
+    a.setTipousuario(tipousuario);
+    a.setSemestre(semestre);
+    a.setGrupo(grupo);
+    a.setTipoalumno(tipoalumno);
+    a.setValida(valida);
 
-        a.setFecha(fecha); // Establecer la fecha como Date
-        
-        if (salumno.guardaralumno(a)) {
-            return salumno.obteneralumno();
-        }
-        return null;
+    SimpleDateFormat formatoOriginal = new SimpleDateFormat("yyyy-MM-dd");
+    try {
+        a.setFecha(formatoOriginal.parse(fecha)); // Convertir la fecha de String a Date
+    } catch (ParseException e) {
+        e.printStackTrace();
+        return null; // Manejar el error según tu lógica
     }
-    
+
+    if (salumno.guardaralumno(a)) {
+        return salumno.obteneralumno();
+    }
+    return null;
+}
+
     @PutMapping("/editaralumno")
 public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
     try {
