@@ -206,7 +206,7 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
         RegistroEntidad r = new RegistroEntidad();
        r.setId(id);
        r.setMatricula(matricula);
-       SimpleDateFormat formatoOriginal = new SimpleDateFormat("dd/MM/yyyy");
+       SimpleDateFormat formatoOriginal = new SimpleDateFormat("yyyy-MM-dd");
        r.setFecha(fecha);
        r.setHora_entrada(hora_entrada);
        r.setHora_salida(hora_salida);
