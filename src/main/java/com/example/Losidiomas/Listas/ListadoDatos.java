@@ -112,5 +112,6 @@ public class ListadoDatos {
         this.total_horasregi = total_horasregi;
     }
 
-   
+  
+    
 }

@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -201,43 +202,96 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
         return sregistro.obtenerRegistro();
     }
     
-    @PostMapping("/guardarregistro")
-    public List<RegistroEntidad> guardaRegistros(Integer id, String matricula, Date fecha, LocalTime hora_entrada, LocalTime hora_salida, String totalHorasStr){
+     @PostMapping("/guardarregistro")
+    public List<RegistroEntidad> guardaRegistros(
+            @RequestParam Integer id,
+            @RequestParam String matricula,
+            @RequestParam String fecha, // Recibida como String en formato yyyy-MM-dd
+            @RequestParam String hora_entrada, // Recibida como String en formato HH:mm:ss
+            @RequestParam String hora_salida, // Recibida como String en formato HH:mm:ss
+            @RequestParam String totalHorasStr) {
+
         RegistroEntidad r = new RegistroEntidad();
-       r.setId(id);
-       r.setMatricula(matricula);
-       SimpleDateFormat formatoOriginal = new SimpleDateFormat("yyyy-MM-dd");
-       r.setFecha(fecha);
-       r.setHora_entrada(hora_entrada);
-       r.setHora_salida(hora_salida);
-     
+        r.setId(id);
+        r.setMatricula(matricula);
+
+        // Formatear fecha y horas
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm:ss");
+
+        try {
+            Date fechaParsed = formatoFecha.parse(fecha);
+            r.setFecha(fechaParsed);
+
+            if (hora_entrada != null && !hora_entrada.isEmpty()) {
+                LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
+                r.setHora_entrada(horaEntradaParsed);
+            }
+
+            if (hora_salida != null && !hora_salida.isEmpty()) {
+                LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
+                r.setHora_salida(horaSalidaParsed);
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null; // Manejar el error según sea necesario
+        }
+
         r.calcularTotalHoras();
-    
-    if (sregistro.guardarRegistro(r)) {
-        return sregistro.obtenerRegistro();
-    }
-    return null;
 
+        if (sregistro.guardarRegistro(r)) {
+            return sregistro.obtenerRegistro();
+        }
+
+        return null;
     }
 
-    @PutMapping("/editarregistro")
-    public List<RegistroEntidad> editaRegistros(Integer id, String matricula, Date fecha, LocalTime hora_entrada, LocalTime hora_salida, String totalHorasStr){
+   @PutMapping("/editarregistro")
+    public List<RegistroEntidad> editaRegistros(
+            @RequestParam Integer id,
+            @RequestParam String matricula,
+            @RequestParam String fecha, // Recibida como String en formato dd/MM/yyyy
+            @RequestParam String hora_entrada, // Recibida como String en formato HH:mm:ss
+            @RequestParam String hora_salida, // Recibida como String en formato HH:mm:ss
+            @RequestParam String totalHorasStr) {
+
         RegistroEntidad r = new RegistroEntidad();
-       r.setId(id);
-       r.setMatricula(matricula);
-       SimpleDateFormat formatoOriginal = new SimpleDateFormat("dd/MM/yyyy");
-       r.setFecha(fecha);
-       r.setHora_entrada(hora_entrada);
-       r.setHora_salida(hora_salida);
-     
-        r.calcularTotalHoras();
-    
-    if (sregistro.editarRegistro(r)) {
-        return sregistro.obtenerRegistro();
-    }
-    return null;
+        r.setId(id);
+        r.setMatricula(matricula);
 
+        // Formatear fecha y horas
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm:ss");
+
+        try {
+            Date fechaParsed = formatoFecha.parse(fecha);
+            r.setFecha(fechaParsed);
+
+            if (hora_entrada != null && !hora_entrada.isEmpty()) {
+                LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
+                r.setHora_entrada(horaEntradaParsed);
+            }
+
+            if (hora_salida != null && !hora_salida.isEmpty()) {
+                LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
+                r.setHora_salida(horaSalidaParsed);
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null; // Manejar el error según sea necesario
+        }
+
+        r.calcularTotalHoras();
+
+        if (sregistro.editarRegistro(r)) {
+            return sregistro.obtenerRegistro();
+        }
+
+        return null;
     }
+
     
     @DeleteMapping("/eliminarregistro")
     public List<RegistroEntidad> eliminarregistro(Integer id){
@@ -297,5 +351,20 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
     
     return listaTodo;
     }
+   
+     @GetMapping("/bitacoras/{matricularegi}")
+    public List<ListadoDatos> obtenerPorMatriculaRegi(@PathVariable String matricularegi) {
+        List<ListadoDatos> resultados = new ArrayList<>();
+        List<ListadoDatos> listaTodo = obtenerTodo(); // Obtener todos los datos primero
+
+        for (ListadoDatos datos : listaTodo) {
+            if (datos.getMatricularegi() != null && datos.getMatricularegi().equals(matricularegi)) {
+                resultados.add(datos);
+            }
+        }
+
+        return resultados;
+    }
+   
 }
     
