@@ -12,6 +12,7 @@ import com.example.Losidiomas.Servicios.ServiciosLogin;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -203,48 +204,50 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
     }
     
      @PostMapping("/guardarregistro")
-    public List<RegistroEntidad> guardaRegistros(
+    public ResponseEntity<List<RegistroEntidad>> guardaRegistros(
             @RequestParam Integer id,
             @RequestParam String matricula,
             @RequestParam String fecha, // Recibida como String en formato yyyy-MM-dd
             @RequestParam String hora_entrada, // Recibida como String en formato HH:mm:ss
             @RequestParam String hora_salida, // Recibida como String en formato HH:mm:ss
-            @RequestParam String totalHorasStr) {
+            @RequestParam String totalHorasStr
+    ) {
 
         RegistroEntidad r = new RegistroEntidad();
         r.setId(id);
         r.setMatricula(matricula);
 
-        // Formatear fecha y horas
+        // Formatear fecha
         SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
-        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm:ss");
 
         try {
             Date fechaParsed = formatoFecha.parse(fecha);
             r.setFecha(fechaParsed);
 
+            // Convertir hora_entrada a LocalTime
             if (hora_entrada != null && !hora_entrada.isEmpty()) {
                 LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
                 r.setHora_entrada(horaEntradaParsed);
             }
 
+            // Convertir hora_salida a LocalTime
             if (hora_salida != null && !hora_salida.isEmpty()) {
                 LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
                 r.setHora_salida(horaSalidaParsed);
             }
 
-        } catch (ParseException e) {
+        } catch (ParseException | DateTimeParseException e) {
             e.printStackTrace();
-            return null; // Manejar el error según sea necesario
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Manejar el error según sea necesario
         }
 
         r.calcularTotalHoras();
 
         if (sregistro.guardarRegistro(r)) {
-            return sregistro.obtenerRegistro();
+            return ResponseEntity.ok(sregistro.obtenerRegistro());
         }
 
-        return null;
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Manejar el error según sea necesario
     }
 
    @PutMapping("/editarregistro")
