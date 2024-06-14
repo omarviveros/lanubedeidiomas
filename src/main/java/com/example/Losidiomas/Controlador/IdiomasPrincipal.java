@@ -212,43 +212,43 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
             @RequestParam String hora_salida, // Recibida como String en formato HH:mm:ss
             @RequestParam String totalHorasStr
     ) {
-
         RegistroEntidad r = new RegistroEntidad();
         r.setId(id);
         r.setMatricula(matricula);
-
+  
         // Formatear fecha
         SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
-
+  
         try {
             Date fechaParsed = formatoFecha.parse(fecha);
             r.setFecha(fechaParsed);
-
+  
             // Convertir hora_entrada a LocalTime
             if (hora_entrada != null && !hora_entrada.isEmpty()) {
                 LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
                 r.setHora_entrada(horaEntradaParsed);
             }
-
+  
             // Convertir hora_salida a LocalTime
             if (hora_salida != null && !hora_salida.isEmpty()) {
                 LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
                 r.setHora_salida(horaSalidaParsed);
             }
-
+  
         } catch (ParseException | DateTimeParseException e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Manejar el error según sea necesario
         }
-
+  
         r.calcularTotalHoras();
-
+  
         if (sregistro.guardarRegistro(r)) {
             return ResponseEntity.ok(sregistro.obtenerRegistro());
         }
-
+  
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // Manejar el error según sea necesario
     }
+    
 
    @PutMapping("/editarregistro")
     public List<RegistroEntidad> editaRegistros(
