@@ -207,9 +207,9 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
     public ResponseEntity<?> guardarRegistro(
             @RequestParam(required = false) Integer id,
             @RequestParam String matricula,
-            @RequestParam String fecha,
-            @RequestParam(required = false) String hora_entrada,
-            @RequestParam(required = false) String hora_salida,
+            @RequestParam String fecha, // Recibida como String en formato yyyy-MM-dd
+            @RequestParam(required = false) String hora_entrada, // Recibida como String en formato HH:mm:ss
+            @RequestParam(required = false) String hora_salida, // Recibida como String en formato HH:mm:ss
             @RequestParam(required = false) String totalHorasStr) {
         
         System.out.println("Parámetros recibidos: id=" + id + ", matricula=" + matricula + 
@@ -241,6 +241,7 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitud incorrecta: formato de fecha u hora inválido");
         }
         
+        // Solo calcular total de horas si ambas horas están presentes
         r.calcularTotalHoras();
         
         if (sregistro.guardarRegistro(r)) {

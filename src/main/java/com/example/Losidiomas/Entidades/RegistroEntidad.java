@@ -87,10 +87,13 @@ public class RegistroEntidad {
         this.total_horas = total_horas;
     }
 
-    public void calcularTotalHoras() {
-        Duration duration = Duration.between(hora_entrada, hora_salida);
-        long totalHoras = duration.toHours();
-        this.total_horas = (int) totalHoras;
+     public void calcularTotalHoras() {
+        if (this.hora_entrada != null && this.hora_salida != null) {
+            Duration duration = Duration.between(this.hora_entrada, this.hora_salida);
+            this.total_horas = (int) duration.toHours();
+        } else {
+            this.total_horas = 0;
+        }
     }
     
 }
