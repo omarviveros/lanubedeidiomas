@@ -204,52 +204,52 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
     }
     
     //guardar registro
-    @PostMapping("/guardarregistro")
-    public ResponseEntity<?> guardarRegistro(
-        @RequestParam(required = false) Integer id,
-        @RequestParam String matricula,
-        @RequestParam String fecha,
-        @RequestParam(required = false) String hora_entrada,
-        @RequestParam(required = false) String hora_salida,
-        @RequestParam(required = false) String totalHorasStr) {
+   @PostMapping("/guardarregistro")
+public ResponseEntity<?> guardarRegistro(
+    @RequestParam(required = false) Integer id,
+    @RequestParam String matricula,
+    @RequestParam String fecha,
+    @RequestParam(required = false) String hora_entrada,
+    @RequestParam(required = false) String hora_salida,
+    @RequestParam(required = false) String totalHorasStr) {
 
-    RegistroEntidad r = new RegistroEntidad();
-    r.setId(id);
-    r.setMatricula(matricula);
+  RegistroEntidad r = new RegistroEntidad();
+  r.setId(id);
+  r.setMatricula(matricula);
 
-    SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+  SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
 
-    try {
-        Date fechaParsed = formatoFecha.parse(fecha);
-        r.setFecha(fechaParsed);
+  try {
+    Date fechaParsed = formatoFecha.parse(fecha);
+    r.setFecha(fechaParsed);
 
-        if (hora_entrada != null && !hora_entrada.isEmpty()) {
-            LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
-            r.setHora_entrada(horaEntradaParsed);
-        }
-
-        if (hora_salida != null && !hora_salida.isEmpty()) {
-            LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
-            r.setHora_salida(horaSalidaParsed);
-            r.calcularTotalHoras(); // Calcula las horas totales cuando se registra la salida
-        }
-
-        if (id != null) {
-            // Si hay un ID, es una actualización
-            return ResponseEntity.ok(sregistro.obtenerRegistro());
-        } else {
-            // Si no hay ID, es un nuevo registro
-            if (sregistro.guardarRegistro(r)) {
-                return ResponseEntity.ok(sregistro.obtenerRegistro());
-            }
-        }
-
-    } catch (ParseException | DateTimeParseException e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitud incorrecta: formato de fecha u hora inválido");
+    if (hora_entrada != null && !hora_entrada.isEmpty()) {
+      LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
+      r.setHora_entrada(horaEntradaParsed);
     }
 
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el registro");
+    if (hora_salida != null && !hora_salida.isEmpty()) {
+      LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
+      r.setHora_salida(horaSalidaParsed);
+      r.calcularTotalHoras(); // Calcula las horas totales cuando se registra la salida
+    }
+
+    if (id != null) {
+      // Si hay un ID, es una actualización
+      return ResponseEntity.ok(sregistro.obtenerRegistro());
+    } else {
+      // Si no hay ID, es un nuevo registro
+      if (sregistro.guardarRegistro(r)) {
+        return ResponseEntity.ok(sregistro.obtenerRegistro());
+      }
+    }
+
+  } catch (ParseException | DateTimeParseException e) {
+    e.printStackTrace();
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitud incorrecta: formato de fecha u hora inválido");
+  }
+
+  return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el registro");
 }
     
 
