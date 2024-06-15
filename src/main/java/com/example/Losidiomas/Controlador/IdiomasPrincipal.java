@@ -206,11 +206,11 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
     //guardar registro
   @PostMapping("/guardarregistro")
     public ResponseEntity<?> guardarRegistro(
-        @RequestParam(required = false) Integer id,
-        @RequestParam String matricula,
-        @RequestParam String fecha,
-        @RequestParam(required = false) String hora_entrada,
-        @RequestParam(required = false) String hora_salida) {
+            @RequestParam(required = false) Integer id,
+            @RequestParam String matricula,
+            @RequestParam String fecha,
+            @RequestParam(required = false) String hora_entrada,
+            @RequestParam(required = false) String hora_salida) {
 
         RegistroEntidad r = new RegistroEntidad();
         r.setId(id);
