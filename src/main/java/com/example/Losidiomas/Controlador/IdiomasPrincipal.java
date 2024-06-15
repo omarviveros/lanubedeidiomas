@@ -232,7 +232,6 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
                 r.setHora_salida(horaSalidaParsed);
             }
 
-            // Calculamos las horas totales si ambas horas están presentes
             r.calcularTotalHoras();
 
             if (id != null) {
@@ -257,21 +256,18 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
     
 
    @PutMapping("/editarregistro")
-    public List<RegistroEntidad> editaRegistros(
+    public ResponseEntity<?> editarRegistros(
             @RequestParam Integer id,
             @RequestParam String matricula,
-            @RequestParam String fecha, // Recibida como String en formato dd/MM/yyyy
-            @RequestParam String hora_entrada, // Recibida como String en formato HH:mm:ss
-            @RequestParam String hora_salida, // Recibida como String en formato HH:mm:ss
-            @RequestParam String totalHorasStr) {
+            @RequestParam String fecha,
+            @RequestParam String hora_entrada,
+            @RequestParam String hora_salida) {
 
         RegistroEntidad r = new RegistroEntidad();
         r.setId(id);
         r.setMatricula(matricula);
 
-        // Formatear fecha y horas
-        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat formatoHora = new SimpleDateFormat("HH:mm:ss");
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
 
         try {
             Date fechaParsed = formatoFecha.parse(fecha);
@@ -287,19 +283,20 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
                 r.setHora_salida(horaSalidaParsed);
             }
 
-        } catch (ParseException e) {
+            r.calcularTotalHoras();
+
+            if (sregistro.editarRegistro(r)) {
+                return ResponseEntity.ok(sregistro.obtenerRegistro());
+            }
+
+        } catch (ParseException | DateTimeParseException e) {
             e.printStackTrace();
-            return null; // Manejar el error según sea necesario
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitud incorrecta: formato de fecha u hora inválido");
         }
 
-        r.calcularTotalHoras();
-
-        if (sregistro.editarRegistro(r)) {
-            return sregistro.obtenerRegistro();
-        }
-
-        return null;
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el registro");
     }
+
 
     
     @DeleteMapping("/eliminarregistro")
@@ -317,7 +314,18 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
     public List<RegistroEntidad> obtenerMatriculas(@RequestParam("matricula") String matricula) {
     return sregistro.buscaraMatricula(matricula);
     }
+    
+    @GetMapping("/obtenerregistro")
+    public ResponseEntity<?> obtenerRegistroPorMatricula(@RequestParam String matricula) {
+        RegistroEntidad registro = sregistro.obtenerRegistroPorMatricula(matricula);
+        if (registro != null) {
+            return ResponseEntity.ok(registro);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Registro no encontrado");
+    }
    
+    
+    //tabla de las bitacoras 
    @GetMapping("/bitacoras")
    public List<ListadoDatos> obtenerTodo() {
     List<ListadoDatos> listaTodo = new ArrayList<>();

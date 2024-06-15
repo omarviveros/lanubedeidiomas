@@ -61,11 +61,24 @@ RepoRegistro rregistro;
           return matriculaOptional;
     
     } catch (Exception error) {
-        System.out.println("Error al buscar el fabricante: " + error.getMessage());
+        System.out.println("Error al buscar la matricula: " + error.getMessage());
         return null;
     }
     //return datosOptional;
     
     }  
+  
+  
+  public RegistroEntidad obtenerRegistroPorMatricula(String matricula) {
+        try {
+            List<RegistroEntidad> registros = rregistro.findByMatricula(matricula);
+            if (!registros.isEmpty()) {
+                return registros.get(0); // Devuelve el primer registro encontrado
+            }
+        } catch (Exception error) {
+            System.out.println("Error al buscar la matrícula: " + error.getMessage());
+        }
+        return null;
+    }
   
 }
