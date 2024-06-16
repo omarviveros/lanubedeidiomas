@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -203,108 +204,91 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
         return sregistro.obtenerRegistro();
     }
     
-    //guardar registro
- @PostMapping("/guardarregistro")
-    public ResponseEntity<?> guardarRegistro(
-            @RequestParam(required = false) Integer id,
-            @RequestParam String matricula,
-            @RequestParam String fecha,
-            @RequestParam(required = false) String hora_entrada,
-            @RequestParam(required = false) String hora_salida) {
+    @PostMapping("/guardarregistro")
+public ResponseEntity<?> guardarRegistro(
+        @RequestParam(required = false) Integer id,
+        @RequestParam String matricula,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fecha,
+        @RequestParam(required = false) String hora_entrada,
+        @RequestParam(required = false) String hora_salida) {
 
-        RegistroEntidad r = new RegistroEntidad();
-        r.setId(id);
-        r.setMatricula(matricula);
+    RegistroEntidad r = new RegistroEntidad();
+    r.setId(id);
+    r.setMatricula(matricula);
+    r.setFecha(fecha);
 
-        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
-
-        try {
-            if (fecha != null && !fecha.isEmpty()) {
-                Date fechaParsed = formatoFecha.parse(fecha);
-                r.setFecha(fechaParsed);
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La fecha es requerida");
-            }
-
-            if (hora_entrada != null && !hora_entrada.isEmpty()) {
-                LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
-                r.setHora_entrada(horaEntradaParsed);
-            }
-
-            if (hora_salida != null && !hora_salida.isEmpty()) {
-                LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
-                r.setHora_salida(horaSalidaParsed);
-            }
-
-            r.calcularTotalHoras();
-
-            if (id != null) {
-                if (sregistro.editarRegistro(r)) {
-                    return ResponseEntity.ok(sregistro.obtenerRegistro());
-                }
-            } else {
-                if (sregistro.guardarRegistro(r)) {
-                    return ResponseEntity.ok(sregistro.obtenerRegistro());
-                }
-            }
-
-        } catch (ParseException | DateTimeParseException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitud incorrecta: formato de fecha u hora inválido");
+    try {
+        if (hora_entrada != null && !hora_entrada.isEmpty()) {
+            LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
+            r.setHora_entrada(horaEntradaParsed);
         }
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el registro");
+        if (hora_salida != null && !hora_salida.isEmpty()) {
+            LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
+            r.setHora_salida(horaSalidaParsed);
+        }
+
+        r.calcularTotalHoras();
+
+        if (id != null) {
+            if (sregistro.editarRegistro(r)) {
+                return ResponseEntity.ok(sregistro.obtenerRegistro());
+            }
+        } else {
+            if (sregistro.guardarRegistro(r)) {
+                return ResponseEntity.ok(sregistro.obtenerRegistro());
+            }
+        }
+
+    } catch (DateTimeParseException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitud incorrecta: formato de fecha u hora inválido");
     }
 
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el registro");
+}
 
 
     
 
-     @PutMapping("/editarregistro")
-    public ResponseEntity<?> editarRegistros(
-            @RequestParam Integer id,
-            @RequestParam String matricula,
-            @RequestParam String fecha,
-            @RequestParam(required = false) String hora_entrada,
-            @RequestParam(required = false) String hora_salida) {
+    @PutMapping("/editarregistro")
+public ResponseEntity<?> editarRegistros(
+        @RequestParam Integer id,
+        @RequestParam String matricula,
+        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fecha,
+        @RequestParam(required = false) String hora_entrada,
+        @RequestParam(required = false) String hora_salida) {
 
-        RegistroEntidad r = new RegistroEntidad();
-        r.setId(id);
-        r.setMatricula(matricula);
+    RegistroEntidad r = new RegistroEntidad();
+    r.setId(id);
+    r.setMatricula(matricula);
+    r.setFecha(fecha);
 
-        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
-
-        try {
-            if (fecha != null && !fecha.isEmpty()) {
-                Date fechaParsed = formatoFecha.parse(fecha);
-                r.setFecha(fechaParsed);
-            } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La fecha es requerida");
-            }
-
-            if (hora_entrada != null && !hora_entrada.isEmpty()) {
-                LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
-                r.setHora_entrada(horaEntradaParsed);
-            }
-
-            if (hora_salida != null && !hora_salida.isEmpty()) {
-                LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
-                r.setHora_salida(horaSalidaParsed);
-            }
-
-            r.calcularTotalHoras();
-
-            if (sregistro.editarRegistro(r)) {
-                return ResponseEntity.ok(sregistro.obtenerRegistro());
-            }
-
-        } catch (ParseException | DateTimeParseException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitud incorrecta: formato de fecha u hora inválido");
+    try {
+        if (hora_entrada != null && !hora_entrada.isEmpty()) {
+            LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
+            r.setHora_entrada(horaEntradaParsed);
         }
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el registro");
+        if (hora_salida != null && !hora_salida.isEmpty()) {
+            LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
+            r.setHora_salida(horaSalidaParsed);
+        }
+
+        r.calcularTotalHoras();
+
+        if (sregistro.editarRegistro(r)) {
+            return ResponseEntity.ok(sregistro.obtenerRegistro());
+        }
+
+    } catch (DateTimeParseException e) {
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitud incorrecta: formato de fecha u hora inválido");
     }
+
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el registro");
+}
+
 
 
 

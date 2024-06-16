@@ -13,6 +13,7 @@ import jakarta.persistence.TemporalType;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Date;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name="bitacora")
