@@ -27,8 +27,8 @@ public class RegistroEntidad {
     @Column(name = "matricula")
     private String matricula;
     
-    @Column(name = "fecha")
     @Temporal(TemporalType.DATE)
+    @Column(name = "fecha")
     private Date fecha;
     
     @Column(name = "hora_entrada")
