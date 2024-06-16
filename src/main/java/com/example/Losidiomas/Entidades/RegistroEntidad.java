@@ -8,6 +8,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.Date;
@@ -21,10 +23,21 @@ public class RegistroEntidad {
     @Basic(optional = false)
     @Column(name = "id")
     private Integer id;
+    
+    @Column(name = "matricula")
     private String matricula;
+    
+    @Column(name = "fecha")
+    @Temporal(TemporalType.DATE)
     private Date fecha;
+    
+    @Column(name = "hora_entrada")
     private LocalTime hora_entrada;
+    
+    @Column(name = "hora_salida")
     private LocalTime hora_salida;
+    
+     @Column(name = "total_horas")
     private int total_horas;
 
     public RegistroEntidad() {

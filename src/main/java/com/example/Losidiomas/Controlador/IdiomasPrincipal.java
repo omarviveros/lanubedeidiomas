@@ -219,8 +219,10 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
         SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
 
         try {
-            Date fechaParsed = formatoFecha.parse(fecha);
-            r.setFecha(fechaParsed);
+            if (fecha != null && !fecha.isEmpty()) {
+                Date fechaParsed = formatoFecha.parse(fecha);
+                r.setFecha(fechaParsed);
+            }
 
             if (hora_entrada != null && !hora_entrada.isEmpty()) {
                 LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
@@ -253,15 +255,16 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
     }
 
 
+
     
 
-   @PutMapping("/editarregistro")
+    @PutMapping("/editarregistro")
     public ResponseEntity<?> editarRegistros(
             @RequestParam Integer id,
             @RequestParam String matricula,
             @RequestParam String fecha,
-            @RequestParam String hora_entrada,
-            @RequestParam String hora_salida) {
+            @RequestParam(required = false) String hora_entrada,
+            @RequestParam(required = false) String hora_salida) {
 
         RegistroEntidad r = new RegistroEntidad();
         r.setId(id);
@@ -270,8 +273,10 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
         SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
 
         try {
-            Date fechaParsed = formatoFecha.parse(fecha);
-            r.setFecha(fechaParsed);
+            if (fecha != null && !fecha.isEmpty()) {
+                Date fechaParsed = formatoFecha.parse(fecha);
+                r.setFecha(fechaParsed);
+            }
 
             if (hora_entrada != null && !hora_entrada.isEmpty()) {
                 LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
@@ -296,6 +301,7 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el registro");
     }
+
 
 
     
