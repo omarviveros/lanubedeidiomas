@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://bbc7j6jynrnotfachtvt-postgresql.services.clever-cloud.com:50013/bbc7j6jynrnotfachtvt
-    username: u4zvcpnnw4n1zzhpeu1b
-    password: hVtRZtrnlMhc7vCcBBXdkFcY8XfKMy
+    url: jdbc:postgresql://bkwgyuacbfptludbhweu-postgresql.services.clever-cloud.com:50013/bkwgyuacbfptludbhweu
+    username: uicej1z2ywsgod4sesq2
+    password: 6XLs5ad9Tfv3HxymsVasZgu1aIQb3X
   jpa:
     hibernate:
       ddl-auto: update
