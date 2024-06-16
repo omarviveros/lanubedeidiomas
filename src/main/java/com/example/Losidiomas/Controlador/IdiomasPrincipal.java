@@ -204,7 +204,7 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
     }
     
     //guardar registro
-  @PostMapping("/guardarregistro")
+ @PostMapping("/guardarregistro")
     public ResponseEntity<?> guardarRegistro(
             @RequestParam(required = false) Integer id,
             @RequestParam String matricula,
@@ -222,6 +222,8 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
             if (fecha != null && !fecha.isEmpty()) {
                 Date fechaParsed = formatoFecha.parse(fecha);
                 r.setFecha(fechaParsed);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La fecha es requerida");
             }
 
             if (hora_entrada != null && !hora_entrada.isEmpty()) {
@@ -258,7 +260,7 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
 
     
 
-    @PutMapping("/editarregistro")
+     @PutMapping("/editarregistro")
     public ResponseEntity<?> editarRegistros(
             @RequestParam Integer id,
             @RequestParam String matricula,
@@ -276,6 +278,8 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
             if (fecha != null && !fecha.isEmpty()) {
                 Date fechaParsed = formatoFecha.parse(fecha);
                 r.setFecha(fechaParsed);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("La fecha es requerida");
             }
 
             if (hora_entrada != null && !hora_entrada.isEmpty()) {
@@ -301,6 +305,7 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el registro");
     }
+
 
 
 
