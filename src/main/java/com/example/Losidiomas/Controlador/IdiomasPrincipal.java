@@ -205,89 +205,89 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
     }
     
     @PostMapping("/guardarregistro")
-public ResponseEntity<?> guardarRegistro(
-        @RequestParam(required = false) Integer id,
-        @RequestParam String matricula,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fecha,
-        @RequestParam(required = false) String hora_entrada,
-        @RequestParam(required = false) String hora_salida) {
+    public ResponseEntity<?> guardarRegistro(
+            @RequestParam(required = false) Integer id,
+            @RequestParam String matricula,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fecha,
+            @RequestParam(required = false) String hora_entrada,
+            @RequestParam(required = false) String hora_salida) {
 
-    RegistroEntidad r = new RegistroEntidad();
-    r.setId(id);
-    r.setMatricula(matricula);
-    r.setFecha(fecha);
+        RegistroEntidad r = new RegistroEntidad();
+        r.setId(id);
+        r.setMatricula(matricula);
+        r.setFecha(fecha);
 
-    try {
-        if (hora_entrada != null && !hora_entrada.isEmpty()) {
-            LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
-            r.setHora_entrada(horaEntradaParsed);
-        }
-
-        if (hora_salida != null && !hora_salida.isEmpty()) {
-            LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
-            r.setHora_salida(horaSalidaParsed);
-        }
-
-        r.calcularTotalHoras();
-
-        if (id != null) {
-            if (sregistro.editarRegistro(r)) {
-                return ResponseEntity.ok(sregistro.obtenerRegistro());
+        try {
+            if (hora_entrada != null && !hora_entrada.isEmpty()) {
+                LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
+                r.setHora_entrada(horaEntradaParsed);
             }
-        } else {
-            if (sregistro.guardarRegistro(r)) {
-                return ResponseEntity.ok(sregistro.obtenerRegistro());
+
+            if (hora_salida != null && !hora_salida.isEmpty()) {
+                LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
+                r.setHora_salida(horaSalidaParsed);
             }
+
+            r.calcularTotalHoras();
+
+            if (id != null) {
+                if (sregistro.editarRegistro(r)) {
+                    return ResponseEntity.ok(sregistro.obtenerRegistro());
+                }
+            } else {
+                if (sregistro.guardarRegistro(r)) {
+                    return ResponseEntity.ok(sregistro.obtenerRegistro());
+                }
+            }
+
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitud incorrecta: formato de fecha u hora inválido");
         }
 
-    } catch (DateTimeParseException e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitud incorrecta: formato de fecha u hora inválido");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el registro");
     }
-
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al guardar el registro");
-}
-
 
     
 
     @PutMapping("/editarregistro")
-public ResponseEntity<?> editarRegistros(
-        @RequestParam Integer id,
-        @RequestParam String matricula,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fecha,
-        @RequestParam(required = false) String hora_entrada,
-        @RequestParam(required = false) String hora_salida) {
+    public ResponseEntity<?> editarRegistros(
+            @RequestParam Integer id,
+            @RequestParam String matricula,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date fecha,
+            @RequestParam(required = false) String hora_entrada,
+            @RequestParam(required = false) String hora_salida) {
 
-    RegistroEntidad r = new RegistroEntidad();
-    r.setId(id);
-    r.setMatricula(matricula);
-    r.setFecha(fecha);
+        RegistroEntidad r = new RegistroEntidad();
+        r.setId(id);
+        r.setMatricula(matricula);
+        r.setFecha(fecha);
 
-    try {
-        if (hora_entrada != null && !hora_entrada.isEmpty()) {
-            LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
-            r.setHora_entrada(horaEntradaParsed);
+        try {
+            if (hora_entrada != null && !hora_entrada.isEmpty()) {
+                LocalTime horaEntradaParsed = LocalTime.parse(hora_entrada);
+                r.setHora_entrada(horaEntradaParsed);
+            }
+
+            if (hora_salida != null && !hora_salida.isEmpty()) {
+                LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
+                r.setHora_salida(horaSalidaParsed);
+            }
+
+            r.calcularTotalHoras();
+
+            if (sregistro.editarRegistro(r)) {
+                return ResponseEntity.ok(sregistro.obtenerRegistro());
+            }
+
+        } catch (DateTimeParseException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitud incorrecta: formato de fecha u hora inválido");
         }
 
-        if (hora_salida != null && !hora_salida.isEmpty()) {
-            LocalTime horaSalidaParsed = LocalTime.parse(hora_salida);
-            r.setHora_salida(horaSalidaParsed);
-        }
-
-        r.calcularTotalHoras();
-
-        if (sregistro.editarRegistro(r)) {
-            return ResponseEntity.ok(sregistro.obtenerRegistro());
-        }
-
-    } catch (DateTimeParseException e) {
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Solicitud incorrecta: formato de fecha u hora inválido");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el registro");
     }
 
-    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el registro");
-}
 
 
 
