@@ -321,62 +321,50 @@ public List<EntidadAlumno> editarralumnos(@RequestBody EntidadAlumno alumno) {
    
     
     //tabla de las bitacoras 
-   @GetMapping("/bitacoras")
-   public List<ListadoDatos> obtenerTodo() {
+ @GetMapping("/bitacoras")
+public List<ListadoDatos> obtenerTodo() {
     List<ListadoDatos> listaTodo = new ArrayList<>();
     
     List<EntidadAlumno> listaAlumno = salumno.obteneralumno();
     List<RegistroEntidad> listaRegistro = sregistro.obtenerRegistro();
     
     for (EntidadAlumno alumno : listaAlumno) {
-        ListadoDatos datosCombinados = new ListadoDatos();
-        datosCombinados.setNusuarioalu(alumno.getNusuario());
-        datosCombinados.setNombrealu(alumno.getNombre());
-        datosCombinados.setDependenciaalu(alumno.getDependencia());
-        datosCombinados.setTipousuariolu(alumno.getTipousuario());
-        datosCombinados.setSemestrealu(alumno.getSemestre());
-        datosCombinados.setGrupoalu(alumno.getGrupo());
-        
-        // Buscar el registro correspondiente al alumno
-        RegistroEntidad registroAlumno = null;
         for (RegistroEntidad registro : listaRegistro) {
-            if (registro.getId() == alumno.getId()) {
-                registroAlumno = registro;
-                break;
+            if (registro.getMatricula().equals(alumno.getNusuario())) {
+                ListadoDatos datosCombinados = new ListadoDatos();
+                datosCombinados.setNusuarioalu(alumno.getNusuario());
+                datosCombinados.setNombrealu(alumno.getNombre());
+                datosCombinados.setDependenciaalu(alumno.getDependencia());
+                datosCombinados.setTipousuariolu(alumno.getTipousuario());
+                datosCombinados.setSemestrealu(alumno.getSemestre());
+                datosCombinados.setGrupoalu(alumno.getGrupo());
+                
+                datosCombinados.setIdregi(registro.getId());
+                datosCombinados.setMatricularegi(registro.getMatricula());
+                datosCombinados.setFecharegi(registro.getFecha());
+                datosCombinados.setTotal_horasregi(registro.getTotal_horas());
+                
+                listaTodo.add(datosCombinados);
             }
         }
-        
-        if (registroAlumno != null) {
-            datosCombinados.setIdregi(registroAlumno.getId());
-            datosCombinados.setMatricularegi(registroAlumno.getMatricula());
-            datosCombinados.setFecharegi(registroAlumno.getFecha());
-            datosCombinados.setTotal_horasregi(registroAlumno.getTotal_horas());
-        } else {
-            datosCombinados.setIdregi(null);
-            datosCombinados.setMatricularegi(null);
-            datosCombinados.setFecharegi(null);
-            datosCombinados.setTotal_horasregi(0);
-        }
-        
-        listaTodo.add(datosCombinados);
     }
     
     return listaTodo;
-    }
+}
    
-     @GetMapping("/bitacoras/{matricularegi}")
-    public List<ListadoDatos> obtenerPorMatriculaRegi(@PathVariable String matricularegi) {
-        List<ListadoDatos> resultados = new ArrayList<>();
-        List<ListadoDatos> listaTodo = obtenerTodo(); // Obtener todos los datos primero
+   @GetMapping("/bitacoras/{matricularegi}")
+public List<ListadoDatos> obtenerPorMatriculaRegi(@PathVariable String matricularegi) {
+    List<ListadoDatos> resultados = new ArrayList<>();
+    List<ListadoDatos> listaTodo = obtenerTodo(); // Obtener todos los datos primero
 
-        for (ListadoDatos datos : listaTodo) {
-            if (datos.getMatricularegi() != null && datos.getMatricularegi().equals(matricularegi)) {
-                resultados.add(datos);
-            }
+    for (ListadoDatos datos : listaTodo) {
+        if (datos.getMatricularegi() != null && datos.getMatricularegi().equals(matricularegi)) {
+            resultados.add(datos);
         }
-
-        return resultados;
     }
+
+    return resultados;
+}
    
 }
     
