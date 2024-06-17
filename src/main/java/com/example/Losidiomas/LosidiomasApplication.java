@@ -20,7 +20,7 @@ public class LosidiomasApplication {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("https://losidiomasnuevo.web.app/")
+                        .allowedOrigins("https://losidiomasnuevo.web.app")
                         .allowCredentials(true)
                         .allowedHeaders("Origin", "Authorization", "Content-Type")
                         .allowedMethods("GET", "POST", "PUT", "DELETE");
